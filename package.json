@@ -1,0 +1,79 @@
+{
+  "name": "bb-plugin-vault-files",
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "bb": ">=0.46",
+    "bbPluginSdk": ">=0.6.49 <0.7"
+  },
+  "bb": {
+    "name": "Vault Files",
+    "description": "Browse vault files beside a BB chat, open document previews and jump to existing Google Drive copies.",
+    "branding": {
+      "icon": "Files"
+    },
+    "server": "./server.ts",
+    "app": "./app.tsx",
+    "host": "./host.ts",
+    "skills": [
+      "skills"
+    ]
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@get-bb/plugin-sdk": "0.6.49",
+    "@testing-library/react": "^16.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "better-sqlite3": "^12.0.0",
+    "cron-parser": "^5.5.0",
+    "hono": "^4.11.9",
+    "jsdom": "^26.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^5.0.5"
+  },
+  "scripts": {
+    "generate": "node generate-lookup.mjs",
+    "build": "node generate-lookup.mjs && bb plugin build .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:python": "python3 -m unittest drive_lookup_test.py"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "dareusgo-byte",
+    "url": "https://github.com/dareusgo-byte"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dareusgo-byte/bb-plugin-vault-files.git"
+  },
+  "description": "Browse vault files beside a BB chat, open document previews and jump to existing Google Drive copies.",
+  "files": [
+    "*.ts",
+    "*.tsx",
+    "*.css",
+    "*.py",
+    "*.mjs",
+    "skills",
+    "README.md",
+    "PLUGIN_OVERVIEW.md",
+    "LICENSE",
+    "tsconfig.json",
+    "assets",
+    "docs",
+    "dist/app.js",
+    "dist/app.css",
+    "dist/app.meta.json",
+    "dist/server.js",
+    "dist/server.meta.json",
+    "dist/host.js",
+    "dist/host.meta.json",
+    "dist/package.json"
+  ]
+}

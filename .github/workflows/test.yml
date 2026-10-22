@@ -1,0 +1,48 @@
+name: Test
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts
+      - run: npm run generate
+      - run: npm run typecheck
+      - run: npm test
+      - run: python -m unittest drive_lookup_test.py
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: vault-files-release-1.0.0
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the reviewed distribution archive
+        run: sha256sum -c .release/SHA256SUMS
+      - name: Publish the first release after all platform checks pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if gh release view v1.0.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release v1.0.0 already exists; leaving it unchanged.'
+          else
+            gh release create v1.0.0 .release/vault-files-1.0.0.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title 'Vault Files 1.0.0' --notes-file .release/NOTES.md
+          fi
